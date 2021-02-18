@@ -1,0 +1,24 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|iteration|parent|children|seconds|warnings|error
+raw_data|stem|66c9130062291454|850e498e1be23545|7e8a38625b4c7191|-979620141|_targets/objects/raw_data|61e259fe2b12de5a|9c3391d3625d1848|222096|fst|vector|||14.224||
+mobility|stem|131ebef08d032246|749c8ff436d4f757|5ee001553f3a68a9|-1318187546|_targets/objects/mobility|5434a982084ea480|62362fdc0a335c74|1807|fst|vector|||2.771||
+epid_curves|stem|83c013155d65daa4|2eaa7060c0a0dce6|9448ca48d8548466|-999487411|_targets/objects/epid_curves|29c01f8d58b5bf81|8c0283933cd6b0ab|81493|qs|vector|||0.011||
+paper|stem|85a202e6b638d07f|d480ab69ad362edf|8dff284ef2e27a22|-1335449298|paper/paper.pdf*paper/paper.Rmd|13191fb9bfbb7331|49d9e61a601f744c|314570|file|vector|||2.593||
+prep_mobility|function|3211ba2f6b5e7456||||||||||||||
+plot_epidem_curve|function|6081937a48d0a46b||||||||||||||
+normalize_weekly_data|function|88f58e7c006290e0||||||||||||||
+get_population_data|function|3cc5d2142f02116a||||||||||||||
+raw_weekly_data|stem|1d57e068b74d7043|d3de015b2f60f4e4|7e8a38625b4c7191|-1758055823|_targets/objects/raw_weekly_data|7d8426ed90a6b987|9c1e0af2769b594e|50470|fst|vector|||22.659||
+population_data|stem|6d4031b0bde6ce58|77936174b68ba6e9|a09639723c30e42a|-534452371|_targets/objects/population_data|a404a8e24318a0ba|57f3bd1fb5b35682|6892|fst|vector|||2.681||
+mobility_raw|stem|16508f712f78baf5|52f098c88ba6f2e0|248a4d7da47a0f45|1042320497|_targets/objects/mobility_raw|bc76c51d01b93dc9|143cc8e3f634fe75|9360|fst|vector|||0.001||
+normalized_weekly_data|stem|6f65bc0033889521|ece2e4b47d045289|dd14e7723f924c0a|-763184083|_targets/objects/normalized_weekly_data|a4a5e39a336e9ff5||66122|fst|vector|||2.543||Problem with mutate input cases. nonnumeric argument to binary operatorℹ Input cases is casespopulation  1e05.
+prep_mobility|function|3211ba2f6b5e7456
+plot_epidem_curve|function|6081937a48d0a46b
+normalize_weekly_data|function|0fe7b6a533d79daa
+get_population_data|function|3cc5d2142f02116a
+raw_weekly_data|stem|1d57e068b74d7043|d3de015b2f60f4e4|7e8a38625b4c7191|-1758055823|_targets/objects/raw_weekly_data|7d8426ed90a6b987|9c1e0af2769b594e|50470|fst|vector|||22.659||
+population_data|stem|6d4031b0bde6ce58|77936174b68ba6e9|a09639723c30e42a|-534452371|_targets/objects/population_data|a404a8e24318a0ba|57f3bd1fb5b35682|6892|fst|vector|||2.681||
+mobility_raw|stem|16508f712f78baf5|52f098c88ba6f2e0|248a4d7da47a0f45|1042320497|_targets/objects/mobility_raw|bc76c51d01b93dc9|143cc8e3f634fe75|9360|fst|vector|||0.001||
+normalized_weekly_data|stem|1d666120b37b514b|ece2e4b47d045289|07b97097f90ac861|-763184083|_targets/objects/normalized_weekly_data|464c737e14a4a00a|e84225a536f93efc|4694|fst|vector|||2.552||
+mobility|stem|131ebef08d032246|749c8ff436d4f757|5ee001553f3a68a9|-1318187546|_targets/objects/mobility|5434a982084ea480|62362fdc0a335c74|1807|fst|vector|||2.771||
+epid_curves|stem|88003e35fb8c9acc|2eaa7060c0a0dce6|dded80da93147a51|-999487411|_targets/objects/epid_curves|cdfc0c6deb20b760|d10c996d526f46c7|42454|qs|vector|||0.009||
+paper|stem|7e0e753440ba91e8|d480ab69ad362edf|72d95f05db644478|-1335449298|paper/paper.pdf*paper/paper.Rmd|240e06eb85490f4b|7ff1665d1bf6a63f|306520|file|vector|||1.649||
