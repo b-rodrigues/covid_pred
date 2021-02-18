@@ -35,6 +35,11 @@ output:
 tar_read(epid_curves)
 ```
 
+
+```{r}
+tar_read(cv_plan)
+```
+
 # Headings: first level
 \label{sec:headings}
 

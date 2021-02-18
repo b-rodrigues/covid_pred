@@ -64,44 +64,27 @@ list(
     plot_epidem_curve(normalized_weekly_data),
     format = "qs"
   ),
+  tar_target(
+    data_for_model,
+    prep_data_for_model(normalized_weekly_data),
+    format = "fst"
+  ),
+  tar_target(
+    splits,
+    time_series_split(data_for_model, date_var = week, assess = "1 month", cumulative = TRUE),
+    format = "qs"
+  ),
+  tar_target(
+    cv_plan,
+    view_cv_plan(splits),
+    format = "qs"
+  ),
   tar_render(
     paper,
     "paper/paper.Rmd"
   )
 )
 
-
-#
-##usethis::use_data(covid_data, overwrite = TRUE)
-#
-#
-#mobility <- fread("2020_LU_Region_Mobility_Report.csv")
-#
-#lu_mob <- mobility %>%
-#  mutate(week = isoweek(date)) %>%
-#  mutate(week = ifelse(nchar(week) == 1, paste0(0, week), week)) %>%  
-#  mutate(week = paste0(year(date), "-W", week, "-1")) %>%
-#  mutate(week = ifelse(week == "2021-W53-1", "2021-W01-1", week)) %>%  
-#  mutate(week = ISOweek2date(week)) %>%  
-#  group_by(week) %>%
-#  summarise(stay_home = mean(residential_percent_change_from_baseline)) %>%
-#  ungroup() %>%  
-#  fill(stay_home, .direction = "down") %>%
-#  mutate(cases = min_max(stay_home)) %>%
-#  mutate(region = "mobility") 
-#
-#
-#dataset <- bind_rows(lu, lu_mob, be, fr, de) %>%
-#  select(week, cases, region)
-#
-#ggplot(dataset) +
-#  geom_line(aes(y = cases, x = week, colour = region))
-#dataset <- dataset %>%
-#  pivot_wider(names_from = region, values_from = cases) %>%
-#  clean_names %>%
-#  filter(!is.na(lux_belge)) %>%
-#  as.data.frame
-#
 #splits <- dataset %>%
 #  time_series_split(date_var = week, assess = "1 month", cumulative = TRUE)
 #

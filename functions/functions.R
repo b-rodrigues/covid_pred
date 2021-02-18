@@ -43,3 +43,17 @@ normalize_weekly_data <- function(covid_data, population){
 get_population_data <- function(){
   covidGrandeRegion::population
 }
+
+prep_data_for_model <- function(covid_data){
+  covid_data %>%
+    filter(!is.na(cases)) %>%
+    group_by(week, country) %>%
+    summarise(cases = sum(cases)) %>%  
+    pivot_wider(names_from = country, values_from = cases)
+}
+
+view_cv_plan <- function(splits){
+  splits %>%
+    tk_time_series_cv_plan() %>%
+    plot_time_series_cv_plan(week, Luxembourg, .interactive = FALSE)
+}

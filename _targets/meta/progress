@@ -1,7 +1,7 @@
 name|type|parent|branches|progress
-normalized_weekly_data|stem|normalized_weekly_data|0|running
-normalized_weekly_data|stem|normalized_weekly_data|0|built
-epid_curves|stem|epid_curves|0|running
-epid_curves|stem|epid_curves|0|built
+splits|stem|splits|0|running
+splits|stem|splits|0|built
+cv_plan|stem|cv_plan|0|running
+cv_plan|stem|cv_plan|0|built
 paper|stem|paper|0|running
 paper|stem|paper|0|built
