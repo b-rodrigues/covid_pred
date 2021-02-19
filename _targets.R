@@ -34,51 +34,168 @@ list(
     get_greater_region_data(),
     format = "fst"
   ),
+
   tar_target(
     raw_weekly_data,
     get_greater_region_data(daily = FALSE),
     format = "fst"
   ),
+
   tar_target(
     population_data,
     get_population_data(),
     format = "fst"
   ),
+
   tar_target(
     normalized_weekly_data,
     normalize_weekly_data(raw_weekly_data, population_data),
     format = "fst"
   ),
+
   tar_target(
     mobility_raw,
     fread("data/2020_LU_Region_Mobility_Report_2021_02_18.csv"),
     format = "fst"
   ),
+
   tar_target(
     mobility,
     prep_mobility(mobility_raw),
     format = "fst"
   ),
+
   tar_target(
     epid_curves,
     plot_epidem_curve(normalized_weekly_data),
     format = "qs"
   ),
+
   tar_target(
     data_for_model,
-    prep_data_for_model(normalized_weekly_data),
+    prep_data_for_model(normalized_weekly_data, mobility),
     format = "fst"
   ),
+
   tar_target(
     splits,
-    time_series_split(data_for_model, date_var = week, assess = "1 month", cumulative = TRUE),
+    time_series_split(data_for_model, date_var = week, assess = "6 weeks", cumulative = TRUE),
     format = "qs"
   ),
+
   tar_target(
     cv_plan,
     view_cv_plan(splits),
     format = "qs"
   ),
+
+  tar_target(
+    model_fit_prophet_boost,
+    set_up_prophet_boost_model(),
+    format = "qs"
+  ),
+
+  tar_target(
+    model_fit_arima_boost,
+    set_up_arima_boost_model(),
+    format = "qs"
+  ),
+
+  tar_target(
+    model_fit_arima_boost_tuned,
+    set_up_arima_boost_model(mtry = tune(),
+                             tree = tune(),
+                             learn_rate = tune(),
+                             tree_depth = tune()),
+    format = "qs"
+  ),
+
+  tar_target(
+    arima_boost_grid,
+    {model_fit_arima_boost_tuned %>%
+       parameters() %>%
+       finalize(select(data_for_model, -Luxembourg)) %>%
+       grid_max_entropy(size = 10)
+    },
+    format = "qs"
+  ),
+
+  tar_target(
+    recipe_spec,
+    set_up_recipe_spec(Luxembourg ~ ., splits),
+    format = "qs"
+  ),
+
+  tar_target(
+    prepped_training_data,
+    view_prepped_training_data(recipe_spec),
+    format = "qs"
+  ),
+
+  tar_target(
+    workflow_fit_prophet_boost,
+    setup_workflow(model_fit_prophet_boost, recipe_spec),
+    format = "qs"
+  ),
+
+  tar_target(
+    workflow_fit_arima_boost,
+    setup_workflow(model_fit_arima_boost, recipe_spec),
+    format = "qs"
+  ),
+
+  tar_target(
+    workflow_fit_arima_boost_tuned,
+    setup_workflow(model_fit_arima_boost_tuned, recipe_spec),
+    format = "qs"
+  ),
+
+  tar_target(
+    fitted_prophet_boost,
+    fit(workflow_fit_prophet_boost, training(splits)),
+    format = "qs"
+  ),
+
+  tar_target(
+    fitted_arima_boost,
+    fit(workflow_fit_arima_boost, training(splits)),
+    format = "qs"
+  ),
+
+  tar_target(
+    cv_splits,
+    time_series_cv(training(splits), initial = 36, assess = 6, lag = 4, cumulative = TRUE),
+    format = "qs"
+  ),
+
+  tar_target(
+    fitted_arima_boost_tuned,
+    tune_grid(workflow_fit_arima_boost_tuned,
+              resamples = cv_splits,
+              grid = arima_boost_grid)
+  ),
+
+  need to train best model.extract
+
+  tar_target(
+    model_table,
+    modeltime_table(fitted_prophet_boost,
+                    fitted_arima_boost),
+    format = "qs"
+  ),
+
+  tar_target(
+    calibrated_wf,
+    modeltime_calibrate(model_table, new_data = testing(splits)),
+    format = "qs"
+  ),
+
+  tar_target(
+    forecast_plot,
+    view_forecast(calibrated_wf, data_for_model, splits),
+    format = "qs"
+  ),
+
   tar_render(
     paper,
     "paper/paper.Rmd"

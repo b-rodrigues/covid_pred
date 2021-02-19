@@ -44,12 +44,13 @@ get_population_data <- function(){
   covidGrandeRegion::population
 }
 
-prep_data_for_model <- function(covid_data){
+prep_data_for_model <- function(covid_data, mobility){
   covid_data %>%
     filter(!is.na(cases)) %>%
     group_by(week, country) %>%
     summarise(cases = sum(cases)) %>%  
-    pivot_wider(names_from = country, values_from = cases)
+    pivot_wider(names_from = country, values_from = cases) %>%
+    left_join(select(mobility, -region))
 }
 
 view_cv_plan <- function(splits){
@@ -57,3 +58,44 @@ view_cv_plan <- function(splits){
     tk_time_series_cv_plan() %>%
     plot_time_series_cv_plan(week, Luxembourg, .interactive = FALSE)
 }
+
+set_up_prophet_boost_model <- function(){
+  prophet_boost(seasonality_daily = FALSE,
+                seasonality_weekly = FALSE,
+                seasonality_yearly = FALSE) %>%
+    set_engine("prophet_xgboost")
+}
+
+set_up_arima_boost_model <- function(...){
+  arima_boost(...) %>%
+    set_engine("arima_xgboost")
+}
+
+set_up_recipe_spec <- function(formula, splits){
+  recipe(formula, training(splits)) %>%
+    step_lag(all_numeric(), lag = seq(1, 4), default = 0) %>%  
+    #step_timeseries_signature(week) %>%
+    #step_rm(contains("am.pm"), contains("hour"), contains("minute"),
+    #        contains("second"), contains("xts")) %>%
+    step_fourier(week, period = 365, K = 3)
+}
+
+view_prepped_training_data <- function(recipe_spec){
+  recipe_spec %>%
+    prep() %>%
+    juice()
+}
+
+setup_workflow <- function(model, recipe_spec){
+  workflow() %>%
+    add_model(model) %>%
+    add_recipe(recipe_spec) 
+}
+
+view_forecast <- function(calibrated_wf, actual_dataset, splits){
+  calibrated_wf %>%
+    modeltime_forecast(actual_data = actual_dataset, new_data = testing(splits)) %>%
+    plot_modeltime_forecast(.interactive = FALSE)
+}
+
+

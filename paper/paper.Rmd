@@ -40,6 +40,11 @@ tar_read(epid_curves)
 tar_read(cv_plan)
 ```
 
+
+```{r}
+tar_read(forecast_plot)
+```
+
 # Headings: first level
 \label{sec:headings}
 
