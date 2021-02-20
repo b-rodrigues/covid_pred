@@ -73,11 +73,11 @@ setup_arima_boost_model <- function(...){
 
 setup_recipe_spec <- function(formula, splits){
   recipe(formula, training(splits)) %>%
-    step_lag(all_numeric(), lag = seq(1, 4), default = 0) %>%  
+    step_lag(all_numeric(), lag = seq(1, 4), default = 0)# %>%  
     #step_timeseries_signature(week) %>%
     #step_rm(contains("am.pm"), contains("hour"), contains("minute"),
     #        contains("second"), contains("xts")) %>%
-    step_fourier(week, period = 365, K = 3)
+    #step_fourier(week, period = 365, K = 3)
 }
 
 view_prepped_training_data <- function(recipe_spec){

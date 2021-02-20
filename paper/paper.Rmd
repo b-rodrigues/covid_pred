@@ -1,17 +1,12 @@
 ---
-title: A template for the *arxiv* style
+title: The spread of COVID-19 in a landlocked country the case of Luxembourg
 authors:
-  - name: David S. Hippocampus
-    thanks: Use footnote for providing further information about author (webpage, alternative address)---*not* for acknowledging funding agencies. Optional.
-    department: Department of Computer Science
-    affiliation: Cranberry-Lemon University
-    location: Pittsburgh, PA 15213
-    email: hippo@cs.cranberry-lemon.edu
-  - name: Elias D. Striatum
-    department: Department of Electrical Engineering
-    affiliation: Mount-Sheikh University
-    location: Santa Narimana, Levand
-    email: stariate@ee.mount-sheikh.edu
+  - name: Bruno Rodrigues
+    thanks: This preprint was written during my free time as a private citizen, and reflects in no manner the views of the Ministry of Higher Education and Research, nor the Government of the Grand-Duchy of Luxembourg.
+    department: Statistics department
+    affiliation: Ministry of Higher Education and Research, Grand-Duchy of Luxembourg
+    location: Luxembourg, 18-20, Montée de la Pétrusse
+    email: bruno.rodrigues@mesr.etat.lu
 abstract: |
   Enter the text of your abstract here.
 keywords:
@@ -28,8 +23,56 @@ output:
 
 # Introduction
 
-\lipsum[2]
-\lipsum[3]
+The Grand-Duchy of Luxembourg is a country that is unique in many ways. As its official name quite
+clearly indicates, it is a grand duchy, the last of its kind on earth. It is a relatively young
+country, as it became a grand duchy once it gained independence from Napoleonic France in 1815 (but
+was pretty much still a puppet state of the Kingdom of the Netherlands until the end of the
+19th century), is one of the founding members of the European Coal and Steel Community, which
+evolved to become the European Union and has three official languages: French, German, and Luxembourguish.
+Luxembourg is also a landlocked country, sandwiched between France, Germany and Belgium. This 
+geographic position has given Luxembourg many advantages. One such advantage is that its labour
+force, which amounts to 400000 workers and is composed of 50\% of French, German and Belgian commuters.
+This is also the reason why Luxembourg has one of the highest GDPs per capita in the world: half
+of its riches are produced by foreigners which are not taken into account in the computation of 
+GDP per capita.
+
+Half of Luxembourg's population is also composed of foreigners, the largest community being the 
+Portuguese, followed by the French.
+
+In this article, I posit the following hypothesis: due to its quite unique characteristics, 
+the spread of COVID-19 in a landlocked country like Luxembourg is the exact opposite of the 
+spread of COVID-19 that can be observed on an island country such as New Zealand, or Madagascar.
+A landlocked country like Luxembourg, which is furthermore highly dependent on foreign workers, 
+has many more difficulties to control the spread of COVID-19 within its borders. Unlike an island
+country, a landlocked country that is highly tied to its neighbours cannot simply close its borders
+and put a very hard lockdown in place to control the pandemic. Or if the landlocked country
+does that, as soon as it opens its borders, the disease will start spreading again.
+To illustrate this idea, I will discuss how COVID-19 starting spreading, but not only within the 
+borders of Luxembourg, but rather within the so-called Greater Region. 
+The Greater Region *a space for cross-border cooperation in the heart of Europe* and 
+is composed of the Grand-Duchy of Luxembourg, two Belgian Provinces, two French Départements and 
+two German Bundesländer.
+
+\begin{figure}
+  \centering
+  \includegraphics{"~/Documents/covid_grande_region/paper/figs/commuters.png"}
+  \caption{The daily commuters in the Greater Region. Luxembourg absorbs the vast majority. (Source: Bienvenue dans la Grande Région, 2018)}
+  \label{commuters}
+\end{figure}
+
+Figure \ref{commuters} show a map of the Greater Region with the flows of daily commuters between
+its constituent regions. Every day, according to this map from 2018, more than 150000 commuters
+go to Luxembourg to work. In 2019, it was reported that this number reached 200000.\footnote{\url{https://paperjam.lu/article/plus-200-000-frontaliers-sur-m}}
+
+The goal of this work is thus as follows: I will train machine learning models to predict the 
+spread of COVID-19 in Luxembourg using openly available data on the weekly positive cases of 
+COVID-19. However, because of the very tight economic and social integration of Luxembourg to its 
+neighbours I will use as features weekly positive cases in the border regions as well as 
+Google Mobility data\footnote{\url{https://www.google.com/covid19/mobility/}} for Luxembourg
+to proxy for hard, and soft, lockdowns. I will show that weekly, and most importantly lags of 
+weekly cases in the neighbouring regions predict cases for Luxembourg.
+
+# The COVID-19 pandemic in Luxembourg
 
 ```{r}
 tar_read(epid_curves)
