@@ -32,7 +32,7 @@ list(
   tar_target(
     raw_data,
     get_greater_region_data(),
-    format = "fst"
+    format = "qs"
   ),
 
   tar_target(
@@ -91,19 +91,19 @@ list(
 
   tar_target(
     model_fit_prophet_boost,
-    set_up_prophet_boost_model(),
+    setup_prophet_boost_model(),
     format = "qs"
   ),
 
   tar_target(
     model_fit_arima_boost,
-    set_up_arima_boost_model(),
+    setup_arima_boost_model(),
     format = "qs"
   ),
 
   tar_target(
     model_fit_arima_boost_tuned,
-    set_up_arima_boost_model(mtry = tune(),
+    setup_arima_boost_model(mtry = tune(),
                              tree = tune(),
                              learn_rate = tune(),
                              tree_depth = tune()),
@@ -122,7 +122,7 @@ list(
 
   tar_target(
     recipe_spec,
-    set_up_recipe_spec(Luxembourg ~ ., splits),
+    setup_recipe_spec(Luxembourg ~ ., splits),
     format = "qs"
   ),
 
@@ -172,15 +172,42 @@ list(
     fitted_arima_boost_tuned,
     tune_grid(workflow_fit_arima_boost_tuned,
               resamples = cv_splits,
-              grid = arima_boost_grid)
+              grid = arima_boost_grid),
+    format = "qs"
   ),
 
-  need to train best model.extract
+  tar_target(
+    best_arima_boost_params,
+    show_best(fitted_arima_boost_tuned, n = 1),
+    format = "qs"
+  ),
+
+  tar_target(
+    best_model_fit_arima_boost, 
+    setup_arima_boost_model(mtry = best_arima_boost_params$mtry,
+                            trees = best_arima_boost_params$trees,
+                            tree_depth = best_arima_boost_params$tree_depth,
+                            learn_rate = best_arima_boost_params$learn_rate),
+    format = "qs"
+  ),
+
+  tar_target(
+    workflow_fit_best_arima_boost,
+    setup_workflow(best_model_fit_arima_boost, recipe_spec),
+    format = "qs"
+  ),
+
+  tar_target(
+    fitted_best_arima_boost,
+    fit(workflow_fit_best_arima_boost, training(splits)),
+    format = "qs"
+  ),
 
   tar_target(
     model_table,
     modeltime_table(fitted_prophet_boost,
-                    fitted_arima_boost),
+                    fitted_arima_boost,
+                    fitted_best_arima_boost),
     format = "qs"
   ),
 

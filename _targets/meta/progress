@@ -1,7 +1,5 @@
 name|type|parent|branches|progress
-cv_splits|stem|cv_splits|0|running
-cv_splits|stem|cv_splits|0|built
-fitted_arima_boost_tuned|stem|fitted_arima_boost_tuned|0|running
-fitted_arima_boost_tuned|stem|fitted_arima_boost_tuned|0|built
-model_table|stem|model_table|0|running
-model_table|stem|model_table|0|errored
+forecast_plot|stem|forecast_plot|0|running
+forecast_plot|stem|forecast_plot|0|built
+paper|stem|paper|0|running
+paper|stem|paper|0|built
