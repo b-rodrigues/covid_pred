@@ -30,12 +30,6 @@ tar_option_set(
 
 list(
   tar_target(
-    raw_data,
-    get_greater_region_data(),
-    format = "qs"
-  ),
-
-  tar_target(
     raw_weekly_data,
     get_greater_region_data(daily = FALSE),
     format = "fst"
