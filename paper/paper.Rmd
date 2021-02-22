@@ -72,12 +72,21 @@ Google Mobility data\footnote{\url{https://www.google.com/covid19/mobility/}} fo
 to proxy for hard, and soft, lockdowns. I will show that weekly, and most importantly lags of 
 weekly cases in the neighbouring regions predict cases for Luxembourg.
 
-# The COVID-19 pandemic in Luxembourg
+# The COVID-19 pandemic in the Greater Region
+
+
 
 ```{r}
 tar_read(epid_curves)
 ```
 
+```{r, out.width = "100%"}
+tar_read(epidem_map)$map_first_wave
+```
+
+```{r, out.width = "100%"}
+tar_read(epidem_map)$map_second_wave
+```
 
 ```{r}
 tar_read(cv_plan)

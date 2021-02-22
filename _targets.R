@@ -18,6 +18,9 @@ options(clustermq.scheduler = "multicore")
 tar_option_set(
   packages = c(
     "covidGrandeRegion",
+    "geojsonio",
+    "sf",
+    "colorspace", 
     "dplyr",
     "data.table",
     "lubridate",
@@ -39,6 +42,24 @@ list(
     population_data,
     get_population_data(),
     format = "fst"
+  ),
+
+  tar_target(
+    grande_region_map,
+    get_grande_region_map(),
+    format = "qs"
+  ),
+
+  tar_target(
+    normalized_monthly_data,
+    get_normalized_monthly_data(raw_weekly_data, population_data),
+    format = "fst"
+  ),
+
+  tar_target(
+    epidem_map,
+    plot_epidem_map(normalized_monthly_data, grande_region_map),
+    format = "qs"
   ),
 
   tar_target(

@@ -1,3 +1,5 @@
 name|type|parent|branches|progress
+epidem_map|stem|epidem_map|0|running
+epidem_map|stem|epidem_map|0|built
 paper|stem|paper|0|running
 paper|stem|paper|0|built

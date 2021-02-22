@@ -24,6 +24,21 @@ plot_epidem_curve <- function(covid_data){
          subtitle = "Positive cases per 100'000 inhabitants")
 }
 
+
+get_normalized_monthly_data <- function(raw_weekly_data, population){
+
+  raw_weekly_data %>%
+    group_by(year = year(week), month = month(week), sub_region) %>%
+    mutate(month = as.character(month)) %>%  
+    summarise(cases = sum(cases)) %>%
+    mutate(month = ifelse(nchar(month) == 1, paste0("0", month), month)) %>%  
+    mutate(year_month = paste0(year, "-", month)) %>%  
+    left_join(select(population, -year)) %>%
+    mutate(cases_per_100k = cases/population * 100000)
+
+}
+
+
 normalize_weekly_data <- function(covid_data, population){
   
   covid_data_country <- covid_data %>%
@@ -42,6 +57,46 @@ normalize_weekly_data <- function(covid_data, population){
 
 get_population_data <- function(){
   covidGrandeRegion::population
+}
+
+get_grande_region_map <- function(){
+  covidGrandeRegion::grande_region_map
+}
+
+plot_epidem_map <- function(normalized_monthly_data, grande_region_map){
+
+  grande_region_map <- geojson_sf(grande_region_map)
+
+  data_to_plot <- normalized_monthly_data %>%
+    left_join(grande_region_map, by = c("sub_region" = "NAME_2"))
+
+  first_wave <- ggplot() +
+    geom_sf(data = grande_region_map, colour = "black", alpha = 0) +
+    geom_sf(data = filter(data_to_plot,
+                        year_month %in% paste0("2020-0", seq(2, 8))), aes(geometry = geometry, fill = cases_per_100k)) +
+    scale_fill_continuous_sequential(palette = "Heat", name = "Cases per 100k inhabitants") +
+    theme_void() +
+    theme(legend.position = "bottom") +
+    guides(fill = guide_colorbar(barheight = 0.5, barwidth =  10)) +
+    facet_wrap(~year_month) +
+    labs(title = "Monthly cases in the Greater Region",
+         subtitle = "Positive cases per 100'000 inhabitants, from February 2020 to August 2020")
+
+
+  second_wave <- ggplot() +
+    geom_sf(data = grande_region_map, colour = "black", alpha = 0) +
+    geom_sf(data = filter(data_to_plot,
+                          !(year_month %in% paste0("2020-0", seq(2, 8)))), aes(geometry = geometry, fill = cases_per_100k)) +
+    scale_fill_continuous_sequential(palette = "Heat", name = "Cases per 100k inhabitants") +
+    theme_void() +
+    theme(legend.position = "bottom") +
+    guides(fill = guide_colorbar(barheight = 0.5, barwidth =  10)) +
+    facet_wrap(~year_month) +
+    labs(title = "Monthly cases in the Greater Region, second wave",
+         subtitle = "Positive cases per 100'000 inhabitants, from September 2020 to February 2021")
+
+  list("map_first_wave" = first_wave,
+       "map_second_wave" = second_wave)
 }
 
 prep_data_for_model <- function(covid_data, mobility){
