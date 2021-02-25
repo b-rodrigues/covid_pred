@@ -27,7 +27,8 @@ tar_option_set(
     "ggplot2",
     "modeltime",
     "timetk",
-    "tidymodels"
+    "tidymodels",
+    "DALEXtra"
   )
 )
 
@@ -135,6 +136,7 @@ list(
     format = "qs"
   ),
 
+  # remove recipe and lag the variables before, this will avoid issues with DALEX
   tar_target(
     recipe_spec,
     setup_recipe_spec(Luxembourg ~ ., splits),
@@ -238,6 +240,15 @@ list(
     format = "qs"
   ),
 
+ # see issue:https://github.com/tidymodels/workflows/issues/63
+  tar_target(
+    explain_best_arima_boost,
+    explain_tidymodels(fitted_best_arima_boost,
+                       data = training(splits),
+                       y = training(splits)$Luxembourg)
+    format = "qs"
+  ),
+
   tar_render(
     paper,
     "paper/paper.Rmd"
@@ -291,3 +302,53 @@ list(
 #calibrated_wf %>%
 #  modeltime_forecast(actual_data = dataset, new_data = testing(splits)) %>%
 #  plot_modeltime_forecast()
+
+# old
+# for explainability 
+  #tar_target(
+  #  iml_fitted_best_arima_boost,
+  #  fit(best_model_fit_arima_boost, Luxembourg ~ ., data = prepped_training_data),
+  #  format = "qs"
+  #),
+
+  #tar_target(
+  #  trained_recipe,
+  #  prep(recipe_spec, training = training(splits)),
+  #  format = "qs"
+  #),
+
+  #tar_target(
+  #  test_bake_features,
+  #  select(bake(trained_recipe, testing(splits)), -Luxembourg),
+  #  format = "qs"
+  #),
+
+  #tar_target(
+  #  target_var,
+  #  select(testing(splits), Luxembourg),
+  #  format = "qs"
+  #),
+
+  ##problem, IML doesn't like date variables
+  #tar_target(
+  #  predictor,
+  #  Predictor$new(
+  #              model = iml_fitted_best_arima_boost,
+  #              data = test_bake_features,
+  #              y = target_var,
+  #              predict.fun = predict_wrapper2 
+  #            ),
+  #  format = "qs"
+  #),
+
+  #tar_target(
+  #  feature_importance,
+  #  FeatureImp$new(predictor, loss = "ce"),
+  #  format = "qs"
+  #),
+
+  #tar_target(
+  #  plot_feature_importance,
+  #  plot(feature_importance),
+  #  format = "qs"
+  #),
