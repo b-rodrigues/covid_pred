@@ -88,13 +88,58 @@ tar_read(epidem_map)$map_first_wave
 tar_read(epidem_map)$map_second_wave
 ```
 
+# The data used
+
+Data on positive cases from the regions of the Greater Region was collected through each of the 
+countries' open data portal. The levels of detail were heterogeneous, with Belgium and Germany
+providing a high level of detail (daily cases by sex, age group, Province in the case of Belgium, and
+Land- and Stadtkreise in the case of Germany), followed by France (daily cases by department and
+age group), with Luxembourg providing the least amount of details; only daily cases at the national
+level. 
+In order to simplify the process of getting the data from all these sources, we wrote an R package
+called `{covidGrandeRegion}` which can be found on the following [github repository](https://github.com/b-rodrigues/covidGrandeRegion).
+This R package provides several functions to download daily or weekly data, either for one single country or for 
+the whole of the Greater Region as well as a function to call an interactive map of the region
+with a timeline, making it easy to visualise the spread of the disease through the region. It is also
+possible to normalize the data by dividing the daily or weekly cases by the size of the population
+in each sub-region.
+Another variable that was included comes from the [Google Mobility website](https://www.google.com/covid19/mobility/).
+This data shows on a daily basis how communities move since the start of the pandemic. This data
+is used here as proxy for lockdowns. The plot below shows the daily percentage change in time 
+spent at home in Luxembourg:
+
+```{r}
+tar_read(plot_mobility)
+```
+
+The hard lockdown from March and April can be clearly seen in the data.
+
+The following table shows the structure of data used in this study:
+
+```{r}
+str(tar_read(data_for_model))
+```
+
+
+
+
 ```{r}
 tar_read(cv_plan)
 ```
 
-
 ```{r}
 tar_read(forecast_plot)
+```
+
+```{r}
+tar_read(plot_var_imp)
+```
+
+```{r}
+tar_read(plot_var_resp)
+```
+```{r}
+tar_read(plot_pred_contributions)
 ```
 
 # Headings: first level

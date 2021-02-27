@@ -15,6 +15,16 @@ prep_mobility <- function(mobility){
     mutate(region = "mobility") 
 }
 
+
+make_plot_mobility <- function(mobility){
+  ggplot(mobility) +
+    geom_line(aes(y = stay_home, x = week)) +
+    theme_minimal() +
+    theme(legend.position = "bottom") +
+    labs(title = "Average weekly change in time spent at home compared to baseline week",
+         subtitle = "Google COVID-19 Community Mobility Report for Luxembourg")
+}
+
 plot_epidem_curve <- function(covid_data){
     ggplot(covid_data) +
     geom_line(aes(y = cases, x = week, colour = country)) +
@@ -102,13 +112,34 @@ plot_epidem_map <- function(normalized_monthly_data, grande_region_map){
        "map_second_wave" = second_wave)
 }
 
+# from:  https://purrple.cat/blog/2018/03/02/multiple-lags-with-tidy-evaluation/
+lags <- function(var, n=10, default = 0){
+  var <- enquo(var)
+  
+  indices <- seq_len(n)
+  map( indices, ~quo(dplyr::lag(!!var, !!.x, default)) ) %>% 
+    set_names(sprintf("lag_%s_%02d", quo_text(var), indices))
+  
+}
+
 prep_data_for_model <- function(covid_data, mobility){
   covid_data %>%
     filter(!is.na(cases)) %>%
     group_by(week, country) %>%
     summarise(cases = sum(cases)) %>%  
     pivot_wider(names_from = country, values_from = cases) %>%
-    left_join(select(mobility, -region))
+    mutate(France = ifelse(week == lubridate::ymd("2020-02-24"), 0, France)) %>%  
+    left_join(select(mobility, -region)) %>%
+    ungroup() %>%  
+    mutate(!!!lags(Belgique, n = 4),
+           !!!lags(Deutschland, n = 4),
+           !!!lags(France, n = 4),
+           !!!lags(stay_home, n = 4)
+           ) %>%  
+    select(-Belgique,
+           -Deutschland,
+           -France,
+           -stay_home)
 }
 
 view_cv_plan <- function(splits){
@@ -129,9 +160,10 @@ setup_arima_boost_model <- function(...){
     set_engine("arima_xgboost")
 }
 
+
 setup_recipe_spec <- function(formula, splits){
-  recipe(formula, training(splits)) %>%
-    step_lag(all_numeric(), lag = seq(1, 4), default = 0) #%>%  
+  recipe(formula, training(splits))
+    #step_lag(all_numeric(), lag = seq(1, 4), default = 0) #%>%  
     #step_mutate(week = as.numeric(week))
     #step_timeseries_signature(week) %>%
     #step_rm(contains("am.pm"), contains("hour"), contains("minute"),

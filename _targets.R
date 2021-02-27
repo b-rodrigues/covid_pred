@@ -22,12 +22,14 @@ tar_option_set(
     "sf",
     "colorspace", 
     "dplyr",
+    "rlang", 
     "data.table",
     "lubridate",
     "ggplot2",
     "modeltime",
     "timetk",
     "tidymodels",
+    "DALEX",
     "DALEXtra"
   )
 )
@@ -36,7 +38,7 @@ list(
   tar_target(
     raw_weekly_data,
     get_greater_region_data(daily = FALSE),
-    format = "fst"
+    format = "qs"
   ),
 
   tar_target(
@@ -81,6 +83,13 @@ list(
     format = "fst"
   ),
 
+
+  tar_target(
+    plot_mobility,
+    make_plot_mobility(mobility),
+    format = "qs"
+  ),
+
   tar_target(
     epid_curves,
     plot_epidem_curve(normalized_weekly_data),
@@ -95,7 +104,7 @@ list(
 
   tar_target(
     splits,
-    time_series_split(data_for_model, date_var = week, assess = "6 weeks", cumulative = TRUE),
+    time_series_split(data_for_model, date_var = week, assess = "8 weeks", cumulative = TRUE),
     format = "qs"
   ),
 
@@ -242,12 +251,52 @@ list(
 
  # see issue:https://github.com/tidymodels/workflows/issues/63
   tar_target(
-    explain_best_arima_boost,
-    explain_tidymodels(fitted_best_arima_boost,
+    explain_arima_boost,
+    explain_tidymodels(fitted_arima_boost,
                        data = training(splits),
-                       y = training(splits)$Luxembourg)
+                       y = training(splits)$Luxembourg),
     format = "qs"
   ),
+
+  tar_target(
+    var_imp,
+    variable_importance(explain_arima_boost),
+    format = "qs"
+  ),
+
+  tar_target(
+    plot_var_imp,
+    plot(var_imp),
+    format = "qs"
+  ),
+
+
+  tar_target(
+    lag_belgique_3_response,
+    model_profile(explain_arima_boost, variables = "lag_Belgique_03", type = "partial"),
+    format = "qs"
+  ),
+
+  tar_target(
+    plot_var_resp,
+    plot(lag_belgique_3_response),
+    format = "qs"
+  ),
+
+  tar_target(
+    pred_contributions,
+    predict_parts_break_down(explain_arima_boost, new_observation = testing(splits)[1,]),
+    format = "qs"
+  ),
+
+  tar_target(
+    plot_pred_contributions,
+    plot(pred_contributions),
+    format = "qs"
+  ),
+
+# take a look at break down plots 
+# https://pbiecek.github.io/breakDown/reference/break_down.html
 
   tar_render(
     paper,

@@ -214,17 +214,80 @@ Region}\label{the-covid-19-pandemic-in-the-greater-region}}
 
 \includegraphics[width=1\linewidth]{paper_files/figure-latex/unnamed-chunk-3-1}
 
+\hypertarget{the-data-used}{%
+\section{The data used}\label{the-data-used}}
+
+Data on positive cases from the regions of the Greater Region was
+collected through each of the countries' open data portal. The levels of
+detail were heterogeneous, with Belgium and Germany providing a high
+level of detail (daily cases by sex, age group, Province in the case of
+Belgium, and Land- and Stadtkreise in the case of Germany), followed by
+France (daily cases by department and age group), with Luxembourg
+providing the least amount of details; only daily cases at the national
+level. In order to simplify the process of getting the data from all
+these sources, we wrote an R package called
+\texttt{\{covidGrandeRegion\}} which can be found on the following
+\href{https://github.com/b-rodrigues/covidGrandeRegion}{github
+repository}. This R package provides several functions to download daily
+or weekly data, either for one single country or for the whole of the
+Greater Region as well as a function to call an interactive map of the
+region with a timeline, making it easy to visualise the spread of the
+disease through the region. It is also possible to normalize the data by
+dividing the daily or weekly cases by the size of the population in each
+sub-region. Another variable that was included comes from the
+\href{https://www.google.com/covid19/mobility/}{Google Mobility
+website}. This data shows on a daily basis how communities move since
+the start of the pandemic. This data is used here as proxy for
+lockdowns. The plot below shows the daily percentage change in time
+spent at home in Luxembourg:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tar\_read}\NormalTok{(plot\_mobility)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{paper_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+The hard lockdown from March and April can be clearly seen in the data.
+
+The following table shows the structure of data used in this study:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(}\FunctionTok{tar\_read}\NormalTok{(data\_for\_model))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    53 obs. of  18 variables:
+##  $ week              : Date, format: "2020-02-24" "2020-03-02" ...
+##  $ Luxembourg        : num  0 0 0 112 164 ...
+##  $ lag_Belgique_01   : num  0 0.0823 2.5787 11.275 32.9196 ...
+##  $ lag_Belgique_02   : num  0 0 0.0823 2.5787 11.275 ...
+##  $ lag_Belgique_03   : num  0 0 0 0.0823 2.5787 ...
+##  $ lag_Belgique_04   : num  0 0 0 0 0.0823 ...
+##  $ lag_Deutschland_01: num  0 0.709 2.815 20.509 37.356 ...
+##  $ lag_Deutschland_02: num  0 0 0.709 2.815 20.509 ...
+##  $ lag_Deutschland_03: num  0 0 0 0.709 2.815 ...
+##  $ lag_Deutschland_04: num  0 0 0 0 0.709 ...
+##  $ lag_France_01     : num  0 0 2.42 42.75 38.65 ...
+##  $ lag_France_02     : num  0 0 0 2.42 42.75 ...
+##  $ lag_France_03     : num  0 0 0 0 2.42 ...
+##  $ lag_France_04     : num  0 0 0 0 0 ...
+##  $ lag_stay_home_01  : num  0 1.286 0.714 3.857 3.857 ...
+##  $ lag_stay_home_02  : num  0 0 1.286 0.714 3.857 ...
+##  $ lag_stay_home_03  : num  0 0 0 1.286 0.714 ...
+##  $ lag_stay_home_04  : num  0 0 0 0 1.29 ...
+\end{verbatim}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{tar\_read}\NormalTok{(cv\_plan)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## Warning: Removed 1 row(s) containing missing values (geom_path).
-\end{verbatim}
-
-\includegraphics{paper_files/figure-latex/unnamed-chunk-4-1.pdf}
+\includegraphics{paper_files/figure-latex/unnamed-chunk-6-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -235,25 +298,33 @@ Region}\label{the-covid-19-pandemic-in-the-greater-region}}
 \begin{verbatim}
 ## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning
 ## -Inf
-
-## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning
-## -Inf
-
-## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning
-## -Inf
-
-## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning
-## -Inf
-
-## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning
-## -Inf
 \end{verbatim}
 
-\begin{verbatim}
-## Warning: Removed 1 row(s) containing missing values (geom_path).
-\end{verbatim}
+\includegraphics{paper_files/figure-latex/unnamed-chunk-7-1.pdf}
 
-\includegraphics{paper_files/figure-latex/unnamed-chunk-5-1.pdf}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tar\_read}\NormalTok{(plot\_var\_imp)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{paper_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tar\_read}\NormalTok{(plot\_var\_resp)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{paper_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tar\_read}\NormalTok{(plot\_pred\_contributions)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{paper_files/figure-latex/unnamed-chunk-10-1.pdf}
 
 \hypertarget{headings-first-level}{%
 \section{Headings: first level}\label{headings-first-level}}
@@ -332,7 +403,7 @@ produces
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{paper_files/figure-latex/unnamed-chunk-6-1.pdf}
+\includegraphics{paper_files/figure-latex/unnamed-chunk-11-1.pdf}
 
 \hypertarget{tables}{%
 \subsection{Tables}\label{tables}}
