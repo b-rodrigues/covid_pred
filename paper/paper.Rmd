@@ -64,16 +64,32 @@ Figure \ref{commuters} show a map of the Greater Region with the flows of daily 
 its constituent regions. Every day, according to this map from 2018, more than 150000 commuters
 go to Luxembourg to work. In 2019, it was reported that this number reached 200000.\footnote{\url{https://paperjam.lu/article/plus-200-000-frontaliers-sur-m}}
 
-The goal of this work is thus as follows: I will train machine learning models to predict the 
+The approach I will be using in this paper is thus as follows: I will train a machine learning model to predict the 
 spread of COVID-19 in Luxembourg using openly available data on the weekly positive cases of 
 COVID-19. However, because of the very tight economic and social integration of Luxembourg to its 
 neighbours I will use as features weekly positive cases in the border regions as well as 
 Google Mobility data\footnote{\url{https://www.google.com/covid19/mobility/}} for Luxembourg
-to proxy for hard, and soft, lockdowns. I will show that weekly, and most importantly lags of 
-weekly cases in the neighbouring regions predict cases for Luxembourg.
+to proxy for hard, and soft, lockdowns. I will show that lags of weekly cases in the neighbouring 
+regions predict cases for Luxembourg. The end goal however, is *not* to build a model to predict
+how many weekly positive cases will be detected in Luxembourg. This would be a fools errand; 
+in order to predict the future, the future has to look like the past, but in the case of this pandemic
+there is absolutely no guarantee that the future will look like the past, and there are many reasons
+for this. First of all, people are constantly adapting their behaviour, and public health policies
+are also constantly being tuned, and getting sometimes more restrictive, sometimes more relaxed.
+Secondly, vaccines have started being administrated and it would be impossible to predict the effect
+on weekly positive cases using the approach I'm using. Finally, there's also the threat of the 
+variants. Here again, it is impossible to predict which new variants could arise and how much more
+contagious -and deadly- these could be.
+So then, why bother with this paper? The end goal is not prediction, but explainability. Once the 
+model is trained, I will use explainability methods to show which variables, and their interaction
+with each other, predict positive cases for Luxembourg. This will be a clear illustration of the
+hypothesis that I posited at the beginning; that a landlocked country like Luxembourg which is very
+tightly economically and socially integrated with its neighbours cannot fight a pandemic on its own,
+but must cooperate with its neighbours. This argument can also be applied to any other country in
+the same situation as Luxembourg or even to the constituent states of a federal nation. Unfortunately, 
+the virus does not respect the borders of sovereign nations.
 
 # The COVID-19 pandemic in the Greater Region
-
 
 
 ```{r}
@@ -98,7 +114,7 @@ age group), with Luxembourg providing the least amount of details; only daily ca
 level. 
 In order to simplify the process of getting the data from all these sources, we wrote an R package
 called `{covidGrandeRegion}` which can be found on the following [github repository](https://github.com/b-rodrigues/covidGrandeRegion).
-This R package provides several functions to download daily or weekly data, either for one single country or for 
+This R package provides several functions to download daily or weekly data, either for one single country or for
 the whole of the Greater Region as well as a function to call an interactive map of the region
 with a timeline, making it easy to visualise the spread of the disease through the region. It is also
 possible to normalize the data by dividing the daily or weekly cases by the size of the population
@@ -112,16 +128,26 @@ spent at home in Luxembourg:
 tar_read(plot_mobility)
 ```
 
-The hard lockdown from March and April can be clearly seen in the data.
-
+The hard lockdown from March and April can be clearly seen in the data. Weekly positive cases
+where divided by the population size in each region and all the variable were lagged up to four times.
+The goal of lagging these variables is to see if cases that were detected in neighbouring countries
+in the past 4 weeks have predictive power. The same was done with the mobility variable (time spent
+at home in Luxembourg). 
 The following table shows the structure of data used in this study:
 
 ```{r}
-str(tar_read(data_for_model))
+print_data <- tar_read(data_for_model) %>%
+  mutate(across(where(is.numeric), ~round(., 0))) %>%
+  t() %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column(var="Variable names") %>%
+  select(seq(1, 6)) %>%
+  unite("First 5 observations", 2:6, sep = ", ") 
+
+kbl(print_data, booktabs = TRUE, position = "center")
 ```
 
-
-
+`Luxembourg` is the target variable.
 
 ```{r}
 tar_read(cv_plan)

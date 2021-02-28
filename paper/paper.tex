@@ -175,16 +175,39 @@ to this map from 2018, more than 150000 commuters go to Luxembourg to
 work. In 2019, it was reported that this number reached
 200000.\footnote{\url{https://paperjam.lu/article/plus-200-000-frontaliers-sur-m}}
 
-The goal of this work is thus as follows: I will train machine learning
-models to predict the spread of COVID-19 in Luxembourg using openly
-available data on the weekly positive cases of COVID-19. However,
-because of the very tight economic and social integration of Luxembourg
-to its neighbours I will use as features weekly positive cases in the
-border regions as well as Google Mobility
+The approach I will be using in this paper is thus as follows: I will
+train a machine learning model to predict the spread of COVID-19 in
+Luxembourg using openly available data on the weekly positive cases of
+COVID-19. However, because of the very tight economic and social
+integration of Luxembourg to its neighbours I will use as features
+weekly positive cases in the border regions as well as Google Mobility
 data\footnote{\url{https://www.google.com/covid19/mobility/}} for
-Luxembourg to proxy for hard, and soft, lockdowns. I will show that
-weekly, and most importantly lags of weekly cases in the neighbouring
-regions predict cases for Luxembourg.
+Luxembourg to proxy for hard, and soft, lockdowns. I will show that lags
+of weekly cases in the neighbouring regions predict cases for
+Luxembourg. The end goal however, is \emph{not} to build a model to
+predict how many weekly positive cases will be detected in Luxembourg.
+This would be a fools errand; in order to predict the future, the future
+has to look like the past, but in the case of this pandemic there is
+absolutely no guarantee that the future will look like the past, and
+there are many reasons for this. First of all, people are constantly
+adapting their behaviour, and public health policies are also constantly
+being tuned, and getting sometimes more restrictive, sometimes more
+relaxed. Secondly, vaccines have started being administrated and it
+would be impossible to predict the effect on weekly positive cases using
+the approach I'm using. Finally, there's also the threat of the
+variants. Here again, it is impossible to predict which new variants
+could arise and how much more contagious -and deadly- these could be. So
+then, why bother with this paper? The end goal is not prediction, but
+explainability. Once the model is trained, I will use explainability
+methods to show which variables, and their interaction with each other,
+predict positive cases for Luxembourg. This will be a clear illustration
+of the hypothesis that I posited at the beginning; that a landlocked
+country like Luxembourg which is very tightly economically and socially
+integrated with its neighbours cannot fight a pandemic on its own, but
+must cooperate with its neighbours. This argument can also be applied to
+any other country in the same situation as Luxembourg or even to the
+constituent states of a federal nation. Unfortunately, the virus does
+not respect the borders of sovereign nations.
 
 \hypertarget{the-covid-19-pandemic-in-the-greater-region}{%
 \section{The COVID-19 pandemic in the Greater
@@ -250,36 +273,57 @@ spent at home in Luxembourg:
 \includegraphics{paper_files/figure-latex/unnamed-chunk-4-1.pdf}
 
 The hard lockdown from March and April can be clearly seen in the data.
-
-The following table shows the structure of data used in this study:
+Weekly positive cases where divided by the population size in each
+region and all the variable were lagged up to four times. The goal of
+lagging these variables is to see if cases that were detected in
+neighbouring countries in the past 4 weeks have predictive power. The
+same was done with the mobility variable (time spent at home in
+Luxembourg). The following table shows the structure of data used in
+this study:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{str}\NormalTok{(}\FunctionTok{tar\_read}\NormalTok{(data\_for\_model))}
+\NormalTok{print\_data }\OtherTok{\textless{}{-}} \FunctionTok{tar\_read}\NormalTok{(data\_for\_model) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{round}\NormalTok{(., }\DecValTok{0}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{t}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as.data.frame}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tibble}\SpecialCharTok{::}\FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var=}\StringTok{"Variable names"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\FunctionTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{6}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{unite}\NormalTok{(}\StringTok{"First 5 observations"}\NormalTok{, }\DecValTok{2}\SpecialCharTok{:}\DecValTok{6}\NormalTok{, }\AttributeTok{sep =} \StringTok{", "}\NormalTok{) }
+
+\FunctionTok{kbl}\NormalTok{(print\_data, }\AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{position =} \StringTok{"center"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## 'data.frame':    53 obs. of  18 variables:
-##  $ week              : Date, format: "2020-02-24" "2020-03-02" ...
-##  $ Luxembourg        : num  0 0 0 112 164 ...
-##  $ lag_Belgique_01   : num  0 0.0823 2.5787 11.275 32.9196 ...
-##  $ lag_Belgique_02   : num  0 0 0.0823 2.5787 11.275 ...
-##  $ lag_Belgique_03   : num  0 0 0 0.0823 2.5787 ...
-##  $ lag_Belgique_04   : num  0 0 0 0 0.0823 ...
-##  $ lag_Deutschland_01: num  0 0.709 2.815 20.509 37.356 ...
-##  $ lag_Deutschland_02: num  0 0 0.709 2.815 20.509 ...
-##  $ lag_Deutschland_03: num  0 0 0 0.709 2.815 ...
-##  $ lag_Deutschland_04: num  0 0 0 0 0.709 ...
-##  $ lag_France_01     : num  0 0 2.42 42.75 38.65 ...
-##  $ lag_France_02     : num  0 0 0 2.42 42.75 ...
-##  $ lag_France_03     : num  0 0 0 0 2.42 ...
-##  $ lag_France_04     : num  0 0 0 0 0 ...
-##  $ lag_stay_home_01  : num  0 1.286 0.714 3.857 3.857 ...
-##  $ lag_stay_home_02  : num  0 0 1.286 0.714 3.857 ...
-##  $ lag_stay_home_03  : num  0 0 0 1.286 0.714 ...
-##  $ lag_stay_home_04  : num  0 0 0 0 1.29 ...
-\end{verbatim}
+\begin{tabular}[t]{ll}
+\toprule
+Variable names & First 5 observations\\
+\midrule
+week & 2020-02-24, 2020-03-02, 2020-03-09, 2020-03-16, 2020-03-23\\
+Luxembourg & 0,   0,   0, 112, 164\\
+lag\_Belgique\_01 & 0,    0,    3,   11,   33\\
+lag\_Belgique\_02 & 0,    0,    0,    3,   11\\
+lag\_Belgique\_03 & 0,    0,    0,    0,    3\\
+\addlinespace
+lag\_Belgique\_04 & 0,    0,    0,    0,    0\\
+lag\_Deutschland\_01 & 0,   1,   3,  21,  37\\
+lag\_Deutschland\_02 & 0,   0,   1,   3,  21\\
+lag\_Deutschland\_03 & 0,   0,   0,   1,   3\\
+lag\_Deutschland\_04 & 0,   0,   0,   0,   1\\
+\addlinespace
+lag\_France\_01 & 0,   0,   2,  43,  39\\
+lag\_France\_02 & 0,   0,   0,   2,  43\\
+lag\_France\_03 & 0,   0,   0,   0,   2\\
+lag\_France\_04 & 0,   0,   0,   0,   0\\
+lag\_stay\_home\_01 & 0,  1,  1,  4,  4\\
+\addlinespace
+lag\_stay\_home\_02 & 0,  0,  1,  1,  4\\
+lag\_stay\_home\_03 & 0,  0,  0,  1,  1\\
+lag\_stay\_home\_04 & 0,  0,  0,  0,  1\\
+\bottomrule
+\end{tabular}
+
+\texttt{Luxembourg} is the target variable.
 
 \begin{Shaded}
 \begin{Highlighting}[]

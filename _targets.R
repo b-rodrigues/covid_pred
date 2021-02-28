@@ -30,7 +30,8 @@ tar_option_set(
     "timetk",
     "tidymodels",
     "DALEX",
-    "DALEXtra"
+    "DALEXtra",
+    "kableExtra"
   )
 )
 
