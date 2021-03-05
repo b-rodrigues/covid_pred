@@ -74,7 +74,7 @@ list(
 
   tar_target(
     mobility_raw,
-    fread("data/2020_LU_Region_Mobility_Report_2021_02_18.csv"),
+    fread("data/2020_LU_Region_Mobility_Report_2021_03_05.csv"),
     format = "fst"
   ),
 
@@ -104,8 +104,14 @@ list(
   ),
 
   tar_target(
+    save_data_for_model,
+    write_data_for_model(data_for_model),
+    format = "file"
+  ),
+
+  tar_target(
     splits,
-    time_series_split(data_for_model, date_var = week, assess = "8 weeks", cumulative = TRUE),
+    time_series_split(data_for_model, date_var = week, assess = "9 weeks", cumulative = TRUE),
     format = "qs"
   ),
 
@@ -141,7 +147,7 @@ list(
     {model_fit_arima_boost_tuned %>%
        parameters() %>%
        finalize(select(data_for_model, -Luxembourg)) %>%
-       grid_max_entropy(size = 10)
+       grid_max_entropy(size = 5)
     },
     format = "qs"
   ),
@@ -232,9 +238,9 @@ list(
 
   tar_target(
     model_table,
-    modeltime_table(fitted_prophet_boost,
-                    fitted_arima_boost,
-                    fitted_best_arima_boost),
+    modeltime_table(#fitted_prophet_boost,
+                    fitted_arima_boost),
+                    #fitted_best_arima_boost),
     format = "qs"
   ),
 

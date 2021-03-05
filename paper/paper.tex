@@ -73,31 +73,6 @@ Luxembourg \\
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 
 % Pandoc citation processing
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-% for Pandoc 2.8 to 2.10.1
-\newenvironment{cslreferences}%
-  {}%
-  {\par}
-% For Pandoc 2.11+
-\newenvironment{CSLReferences}[3] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
-  % set entry spacing
-  \ifnum #2 > 0
-  \setlength{\parskip}{#2\baselineskip}
-  \fi
- }%
- {}
-\usepackage{calc} % for calculating minipage widths
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 
 
@@ -213,13 +188,37 @@ not respect the borders of sovereign nations.
 \section{The COVID-19 pandemic in the Greater
 Region}\label{the-covid-19-pandemic-in-the-greater-region}}
 
+COVID-19 started to spread in the Greater Region around end of February.
+Two french \emph{départements}, the \emph{Bas-Rhin} and the
+\emph{Haut-Rhin}, which together form the historical region of Alsace,
+were hit very hard. A religious gathering in the \emph{Haut-Rhin}, with
+more than 2000 worshipers is the very likely start of the spread in
+Alsace, and then to the neighbouring Lorraine administrative region.
+Alsace is part of the \emph{Grand Est} region, as is Lorraine. Two
+\emph{départements} of \emph{Lorraine} are part of the Greater Region,
+and the disease spread there quickly as well.
+
+In Luxembourg, the first identified case was announced during a press
+conference on the 29th of February 2020. However, in the publicly
+available data, cases start on the week of the 16th. This was never, as
+far as I know, explained. However, in August 2020 it was announced that
+positive cases detected among non-residents would not be counted
+anymore. The only logical conclusion is that the first cases, up until
+the 16th of March, were of non-residents.
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{tar\_read}\NormalTok{(epid\_curves)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{paper_files/figure-latex/unnamed-chunk-1-1.pdf}
+\begin{figure}
+\centering
+\includegraphics{paper_files/figure-latex/epid_curves-1.pdf}
+\caption{Test}
+\end{figure}
+
+In Figure @ref(fig:epid\_curves)
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -227,7 +226,7 @@ Region}\label{the-covid-19-pandemic-in-the-greater-region}}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=1\linewidth]{paper_files/figure-latex/unnamed-chunk-2-1}
+\includegraphics[width=1\linewidth]{paper_files/figure-latex/unnamed-chunk-1-1}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -235,7 +234,7 @@ Region}\label{the-covid-19-pandemic-in-the-greater-region}}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=1\linewidth]{paper_files/figure-latex/unnamed-chunk-3-1}
+\includegraphics[width=1\linewidth]{paper_files/figure-latex/unnamed-chunk-2-1}
 
 \hypertarget{the-data-used}{%
 \section{The data used}\label{the-data-used}}
@@ -270,7 +269,7 @@ spent at home in Luxembourg:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{paper_files/figure-latex/unnamed-chunk-4-1.pdf}
+\includegraphics{paper_files/figure-latex/unnamed-chunk-3-1.pdf}
 
 The hard lockdown from March and April can be clearly seen in the data.
 Weekly positive cases where divided by the population size in each
@@ -331,7 +330,7 @@ lag\_stay\_home\_04 & 0,  0,  0,  0,  1\\
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{paper_files/figure-latex/unnamed-chunk-6-1.pdf}
+\includegraphics{paper_files/figure-latex/unnamed-chunk-5-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -344,7 +343,7 @@ lag\_stay\_home\_04 & 0,  0,  0,  0,  1\\
 ## -Inf
 \end{verbatim}
 
-\includegraphics{paper_files/figure-latex/unnamed-chunk-7-1.pdf}
+\includegraphics{paper_files/figure-latex/unnamed-chunk-6-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -352,7 +351,7 @@ lag\_stay\_home\_04 & 0,  0,  0,  0,  1\\
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{paper_files/figure-latex/unnamed-chunk-8-1.pdf}
+\includegraphics{paper_files/figure-latex/unnamed-chunk-7-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -360,7 +359,7 @@ lag\_stay\_home\_04 & 0,  0,  0,  0,  1\\
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{paper_files/figure-latex/unnamed-chunk-9-1.pdf}
+\includegraphics{paper_files/figure-latex/unnamed-chunk-8-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -368,145 +367,10 @@ lag\_stay\_home\_04 & 0,  0,  0,  0,  1\\
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{paper_files/figure-latex/unnamed-chunk-10-1.pdf}
+\includegraphics{paper_files/figure-latex/unnamed-chunk-9-1.pdf}
 
-\hypertarget{headings-first-level}{%
-\section{Headings: first level}\label{headings-first-level}}
-
-\label{sec:headings}
-
-\lipsum[4] See Section \ref{sec:headings}.
-
-\hypertarget{headings-second-level}{%
-\subsection{Headings: second level}\label{headings-second-level}}
-
-\lipsum[5]
-
-\[
-\xi _{ij}(t)=P(x_{t}=i,x_{t+1}=j|y,v,w;\theta)= {\frac {\alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}{\sum _{i=1}^{N} \sum _{j=1}^{N} \alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}}
-\]
-
-\hypertarget{headings-third-level}{%
-\subsubsection{Headings: third level}\label{headings-third-level}}
-
-\lipsum[6]
-
-\paragraph{Paragraph}
-\lipsum[7]
-
-\hypertarget{examples-of-citations-figures-tables-references}{%
-\section{Examples of citations, figures, tables,
-references}\label{examples-of-citations-figures-tables-references}}
-
-\label{sec:others}
-
-\lipsum[8] some text (Kour and Saabne 2014b, 2014a) and see Hadash et
-al. (2018).
-
-The documentation for \verb+natbib+ may be found at
-
-\begin{center}
-  \url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-
-Of note is the command \verb+\citet+, which produces citations
-appropriate for use in inline text. For example,
-
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-
-produces
-
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
-
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-
-\hypertarget{figures}{%
-\subsection{Figures}\label{figures}}
-
-\lipsum[10] See Figure \ref{fig:fig1}. Here is how you add footnotes.
-{[}\^{}Sample of the first footnote.{]}
-
-\lipsum[11]
-
-\begin{figure}
-  \centering
-  \fbox{\rule[-.5cm]{4cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
-  \label{fig:fig1}
-\end{figure}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(mtcars}\SpecialCharTok{$}\NormalTok{mpg)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{paper_files/figure-latex/unnamed-chunk-11-1.pdf}
-
-\hypertarget{tables}{%
-\subsection{Tables}\label{tables}}
-
-\lipsum[12]
-
-See awesome Table\textasciitilde{}\ref{tab:table}.
-
-\begin{table}
- \caption{Sample table title}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule(r){1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-  \label{tab:table}
-\end{table}
-
-\hypertarget{lists}{%
-\subsection{Lists}\label{lists}}
-
-\begin{itemize}
-\tightlist
-\item
-  Lorem ipsum dolor sit amet
-\item
-  consectetur adipiscing elit.
-\item
-  Aliquam dignissim blandit est, in dictum tortor gravida eget. In ac
-  rutrum magna.
-\end{itemize}
-
-\hypertarget{refs}{}
-\begin{CSLReferences}{1}{0}
-\leavevmode\hypertarget{ref-hadash2018estimate}{}%
-Hadash, Guy, Einat Kermany, Boaz Carmeli, Ofer Lavi, George Kour, and
-Alon Jacovi. 2018. {``Estimate and Replace: A Novel Approach to
-Integrating Deep Neural Networks with Existing Applications.''}
-\emph{arXiv Preprint arXiv:1804.09028}.
-
-\leavevmode\hypertarget{ref-kour2014fast}{}%
-Kour, George, and Raid Saabne. 2014a. {``Fast Classification of
-Handwritten on-Line Arabic Characters.''} In \emph{Soft Computing and
-Pattern Recognition (SoCPaR), 2014 6th International Conference of},
-312--18. IEEE.
-
-\leavevmode\hypertarget{ref-kour2014real}{}%
----------. 2014b. {``Real-Time Segmentation of on-Line Handwritten
-Arabic Script.''} In \emph{Frontiers in Handwriting Recognition (ICFHR),
-2014 14th International Conference on}, 417--22. IEEE.
-
-\end{CSLReferences}
+\hypertarget{appendix}{%
+\section{Appendix}\label{appendix}}
 
 \bibliographystyle{unsrt}
 \bibliography{references.bib}

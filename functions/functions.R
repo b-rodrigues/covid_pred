@@ -1,6 +1,12 @@
 
 # prepares google mobility data
 
+
+write_data_for_model <- function(data_for_model){
+  fwrite(data_for_model, "data/data_for_model.csv")
+  return("data/data_for_model.csv")
+}
+
 prep_mobility <- function(mobility){
   mobility %>%
     mutate(week = isoweek(date)) %>%
@@ -20,7 +26,8 @@ make_plot_mobility <- function(mobility){
   ggplot(mobility) +
     geom_line(aes(y = stay_home, x = week)) +
     theme_minimal() +
-    theme(legend.position = "bottom") +
+    theme(legend.position = "bottom",
+          legend.title = element_blank()) +
     labs(title = "Average weekly change in time spent at home compared to baseline week",
          subtitle = "Google COVID-19 Community Mobility Report for Luxembourg")
 }
@@ -29,7 +36,8 @@ plot_epidem_curve <- function(covid_data){
     ggplot(covid_data) +
     geom_line(aes(y = cases, x = week, colour = country)) +
     theme_minimal() +
-    theme(legend.position = "bottom") +
+    theme(legend.position = "bottom",
+            legend.title = element_blank()) +
     labs(title = "Weekly COVID-19 cases in the countries of the Greater Region",
          subtitle = "Positive cases per 100'000 inhabitants")
 }
@@ -145,7 +153,9 @@ prep_data_for_model <- function(covid_data, mobility){
 view_cv_plan <- function(splits){
   splits %>%
     tk_time_series_cv_plan() %>%
-    plot_time_series_cv_plan(week, Luxembourg, .interactive = FALSE)
+    plot_time_series_cv_plan(week, Luxembourg, .interactive = FALSE) +
+    theme(legend.position = "bottom",
+        legend.title = element_blank())
 }
 
 setup_prophet_boost_model <- function(){
@@ -187,7 +197,8 @@ view_forecast <- function(calibrated_wf, actual_dataset, splits){
   calibrated_wf %>%
     modeltime_forecast(actual_data = actual_dataset, new_data = testing(splits)) %>%
     plot_modeltime_forecast(.interactive = FALSE) +
-    guides(col = guide_legend(nrow = 2))
+    guides(col = guide_legend(ncol = 1)) +
+    theme(legend.title = element_blank())
 }
 
 
