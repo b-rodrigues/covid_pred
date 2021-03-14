@@ -1,16 +1,5 @@
 library(targets)
 library(tarchetypes)
-#library(covidGrandeRegion)
-#library(dplyr)
-##library(lubridate)
-##library(tidyr)
-#library(ggplot2)
-##library(data.table)
-##library(janitor)
-##library(stringr)
-#library(modeltime)
-#library(timetk)
-#library(tidymodels)
 
 source("functions/functions.R")
 options(clustermq.scheduler = "multicore")
@@ -111,7 +100,7 @@ list(
 
   tar_target(
     splits,
-    time_series_split(data_for_model, date_var = week, assess = "9 weeks", cumulative = TRUE),
+    time_series_split(data_for_model, date_var = week, assess = "10 weeks", cumulative = TRUE),
     format = "qs"
   ),
 
@@ -197,7 +186,7 @@ list(
 
   tar_target(
     cv_splits,
-    time_series_cv(training(splits), initial = 36, assess = 6, lag = 4, cumulative = TRUE),
+    time_series_cv(training(splits), initial = 39, assess = 6, lag = 4, cumulative = TRUE),
     format = "qs"
   ),
 
